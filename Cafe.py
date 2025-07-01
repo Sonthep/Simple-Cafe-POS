@@ -1,24 +1,34 @@
-# V5 - Refactored with Functions
+# V5 - Refactored with Functions (Corrected Version)
 
-# ----- DATA (ข้อมูลหลักของร้าน) -----
-# การตั้งชื่อตัวแปรเป็นตัวพิมพ์ใหญ่ทั้งหมด เป็นข้อตกลงว่าข้อมูลนี้เป็นค่าคงที่ (Constant)
+class menuItem:
+    """A class to represent an item on the cafe menu."""
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def __str__(self):
+        return f"{self.name} {self.price:.2f} บาท"
+        
+# ----- DATA (Store's primary data) -----
+# Using all caps is a convention for constants.
 MENU_ITEMS = [
-    {"name": "Americano", "price": 55.75},
-    {"name": "Latte", "price": 60.15},
-    {"name": "Espresso", "price": 50.15},
-    {"name": "Cappuccino", "price": 65.00}
+    menuItem("Americano", 55.75),
+    menuItem("Latte", 60.15),
+    menuItem("Espresso", 50.15),
+    menuItem("Cappuccino", 65.00)
 ]
 
-# ----- FUNCTIONS (เครื่องมือที่เราสร้างขึ้น) -----
+# ----- FUNCTIONS (Custom tools) -----
 
 def display_menu(menu):
-    """ฟังก์ชันสำหรับแสดงผลเมนู"""
+    """Function to display the menu."""
     print("กรุณาเลือกรายการที่ต้องการ (กด 0 เพื่อคิดเงิน)")
     for i, item in enumerate(menu):
-        print(f"{i+1}. {item['name']} {item['price']:.2f} บาท")
+        # CORRECTED: Use dot notation (item.name) for object attributes
+        print(f"{i+1}. {item.name} {item.price:.2f} บาท")
 
 def print_receipt(order_list, total):
-    """ฟังก์ชันสำหรับพิมพ์ใบเสร็จทั้งหมด"""
+    """Function to print the final receipt."""
     print("\n========================")
     print("        รายการสั่งซื้อ (บิล)")
     print("------------------------")
@@ -32,7 +42,7 @@ def print_receipt(order_list, total):
     print("------------------------")
     print(f"ยอดรวมทั้งหมด : {total:.2f} บาท")
 
-    # --- ส่วนลดโปรโมชั่น ---
+    # --- Promotional Discount ---
     if total > 100:
         discount = total * 0.1
         final_price = total - discount
@@ -45,14 +55,14 @@ def print_receipt(order_list, total):
 # ----- MAIN APPLICATION LOGIC -----
 
 def main():
-    """ฟังก์ชันหลักที่ควบคุมการทำงานของโปรแกรมทั้งหมด"""
+    """The main function that controls the program's flow."""
     print("Welcome to the Zodiac Cafe POS V5")
     
     running_total = 0
     order_list = []
 
     while True:
-        display_menu(MENU_ITEMS) # เรียกใช้ฟังก์ชันแสดงเมนู
+        display_menu(MENU_ITEMS) # Call the menu display function
         print("-" * 30)
         order_input = input("กรุณาเลือกเมนู (1-4) หรือ 0 เพื่อสรุปยอด: ")
         
@@ -74,27 +84,31 @@ def main():
             quantity = int(quantity_input)
             
             selected_item = MENU_ITEMS[order - 1]
-            unit_price = selected_item['price']
+            
+            # CORRECTED: Use dot notation for object attributes
+            unit_price = selected_item.price
             line_total = unit_price * quantity
             running_total += line_total
             
+            # This part is correct, as it creates a new dictionary for the order list
             order_list.append({
-                "name": selected_item['name'],
+                "name": selected_item.name, # CORRECTED
                 "quantity": quantity,
                 "unit_price": unit_price,
                 "line_total": line_total
             })
             
-            print(f"เพิ่ม '{selected_item['name']} x{quantity}' เรียบร้อย")
-            print(f"ยอดชั่วคราว: {running_total:.2f} บาท")
+            # CORRECTED: Use dot notation for the print statement
+            print(f"เพิ่ม '{selected_item.name} x{quantity}' เรียบร้อย")
+            print(f"ยอดชั่วคราว: {running_total:.2f} บาท\n")
 
         else:
             print("ขออภัย ไม่มีเมนูที่คุณเลือก กรุณาเลือกใหม่อีกครั้ง")
             
-    # หลังจากออกจาก Loop แล้ว ให้เรียกใช้ฟังก์ชันพิมพ์ใบเสร็จ
+    # After the loop ends, call the receipt printing function
     print_receipt(order_list, running_total)
 
-# ----- ENTRY POINT (จุดเริ่มต้นของโปรแกรม) -----
-# เป็นข้อตกลงใน Python ว่าจะเรียกฟังก์ชัน main() จากตรงนี้
+# ----- ENTRY POINT (Program's starting point) -----
+# This is a standard convention in Python to call the main() function.
 if __name__ == "__main__":
     main()
